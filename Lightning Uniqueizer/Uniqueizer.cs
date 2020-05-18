@@ -12,6 +12,8 @@ namespace Lightning_Uniqueizer
         public static void ProcessPicture(string path, int pixel_count, string watermark_path = "", int water_count = 0 )
         {
             //TODO: make uniqueizer algorithm here
+            //      random crop
+            //      random rotate
         }
     }
     class Uniqueizer
