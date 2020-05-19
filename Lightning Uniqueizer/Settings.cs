@@ -11,6 +11,8 @@ namespace Lightning_Uniqueizer
     {
         public bool bUseMultithread;
         public bool bUseWatermark;
+        public bool bRandomCrop;
+        public bool bRandomRotate;
         public string sWatermarkFolder;
         public string sDefaultPicturesFolder;
         public int iThreadCount;
@@ -39,6 +41,16 @@ namespace Lightning_Uniqueizer
         public void SetUseWatermark(bool val)
         {
             m_Settings.bUseWatermark = val;
+        }
+
+        public void SetRandomCrop(bool val)
+        {
+            m_Settings.bRandomCrop = val;
+        }
+
+        public void SetRandomRotate(bool val)
+        {
+            m_Settings.bRandomRotate = val;
         }
 
         public void SetWatermarkFolder(string folder)
@@ -107,7 +119,17 @@ namespace Lightning_Uniqueizer
                             m_Settings.bUseWatermark = parse_get_bool(splitted[1]);
                             continue;
                         }
-                        if(splitted[0] == "watermark_folder")
+                        if (splitted[0] == "random_crop")
+                        {
+                            m_Settings.bRandomCrop = parse_get_bool(splitted[1]);
+                            continue;
+                        }
+                        if (splitted[0] == "random_rotate")
+                        {
+                            m_Settings.bRandomRotate = parse_get_bool(splitted[1]);
+                            continue;
+                        }
+                        if (splitted[0] == "watermark_folder")
                         {
                             m_Settings.sWatermarkFolder = splitted[1];
                             continue;
@@ -139,6 +161,8 @@ namespace Lightning_Uniqueizer
                 var writer = File.CreateText(settings_path);
                 writer.WriteLine("use_multithread = true");
                 writer.WriteLine("use_watermark = false");
+                writer.WriteLine("random_crop = false");
+                writer.WriteLine("random_rotate = true");
                 writer.WriteLine("watermark_folder = nil");
                 writer.WriteLine("pictures_folder = nil");
                 writer.WriteLine("pixel_count = 1");
@@ -147,6 +171,8 @@ namespace Lightning_Uniqueizer
                 writer.Close();
                 m_Settings.bUseMultithread = true;
                 m_Settings.bUseWatermark = false;
+                m_Settings.bRandomCrop = false;
+                m_Settings.bRandomRotate = true;
                 m_Settings.sWatermarkFolder = "nil";
                 m_Settings.sDefaultPicturesFolder = "nil";
                 m_Settings.iPixelCount = 1;
@@ -161,6 +187,8 @@ namespace Lightning_Uniqueizer
             var writer = File.CreateText(settings_path);
             writer.WriteLine("use_multithread = " + save_get_bool(m_Settings.bUseMultithread));
             writer.WriteLine("use_watermark = " + save_get_bool(m_Settings.bUseWatermark));
+            writer.WriteLine("random_crop = " + save_get_bool(m_Settings.bRandomCrop));
+            writer.WriteLine("random_rotate = " + save_get_bool(m_Settings.bRandomRotate));
             writer.WriteLine("watermark_folder = " + m_Settings.sWatermarkFolder);
             writer.WriteLine("pictures_folder = " + m_Settings.sDefaultPicturesFolder);
             writer.WriteLine("pixel_count = " + m_Settings.iPixelCount.ToString());
@@ -172,5 +200,7 @@ namespace Lightning_Uniqueizer
     class Globals
     {
         public static Settings settings = new Settings();
+        public static Uniqueizer uniq = new Uniqueizer();
+
     }
 }

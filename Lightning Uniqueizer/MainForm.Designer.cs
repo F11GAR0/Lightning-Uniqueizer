@@ -45,6 +45,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.bStart = new System.Windows.Forms.Button();
             this.fBD = new System.Windows.Forms.FolderBrowserDialog();
+            this.cbRandomCrop = new System.Windows.Forms.CheckBox();
+            this.cbRandomRotate = new System.Windows.Forms.CheckBox();
             this.gbSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nMaxThreads)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nMaxWaters)).BeginInit();
@@ -53,6 +55,8 @@
             // 
             // gbSettings
             // 
+            this.gbSettings.Controls.Add(this.cbRandomRotate);
+            this.gbSettings.Controls.Add(this.cbRandomCrop);
             this.gbSettings.Controls.Add(this.label4);
             this.gbSettings.Controls.Add(this.nMaxPixels);
             this.gbSettings.Controls.Add(this.label3);
@@ -67,7 +71,7 @@
             this.gbSettings.Enabled = false;
             this.gbSettings.Location = new System.Drawing.Point(12, 41);
             this.gbSettings.Name = "gbSettings";
-            this.gbSettings.Size = new System.Drawing.Size(349, 186);
+            this.gbSettings.Size = new System.Drawing.Size(349, 238);
             this.gbSettings.TabIndex = 0;
             this.gbSettings.TabStop = false;
             this.gbSettings.Text = "Настройки";
@@ -140,6 +144,7 @@
             this.bChoiceWaterFolder.TabIndex = 3;
             this.bChoiceWaterFolder.Text = "Выбрать";
             this.bChoiceWaterFolder.UseVisualStyleBackColor = true;
+            this.bChoiceWaterFolder.Click += new System.EventHandler(this.bChoiceWaterFolder_Click);
             // 
             // label1
             // 
@@ -225,22 +230,45 @@
             // bStart
             // 
             this.bStart.Enabled = false;
-            this.bStart.Location = new System.Drawing.Point(12, 240);
+            this.bStart.Location = new System.Drawing.Point(12, 285);
             this.bStart.Name = "bStart";
             this.bStart.Size = new System.Drawing.Size(75, 23);
             this.bStart.TabIndex = 3;
             this.bStart.Text = "Начать";
             this.bStart.UseVisualStyleBackColor = true;
+            this.bStart.Click += new System.EventHandler(this.bStart_Click);
             // 
             // fBD
             // 
             this.fBD.Description = "Выберите папку";
             // 
+            // cbRandomCrop
+            // 
+            this.cbRandomCrop.AutoSize = true;
+            this.cbRandomCrop.Location = new System.Drawing.Point(6, 186);
+            this.cbRandomCrop.Name = "cbRandomCrop";
+            this.cbRandomCrop.Size = new System.Drawing.Size(151, 17);
+            this.cbRandomCrop.TabIndex = 11;
+            this.cbRandomCrop.Text = "Случайно обрезать фото";
+            this.cbRandomCrop.UseVisualStyleBackColor = true;
+            this.cbRandomCrop.CheckedChanged += new System.EventHandler(this.cbRandomCrop_CheckedChanged);
+            // 
+            // cbRandomRotate
+            // 
+            this.cbRandomRotate.AutoSize = true;
+            this.cbRandomRotate.Location = new System.Drawing.Point(6, 209);
+            this.cbRandomRotate.Name = "cbRandomRotate";
+            this.cbRandomRotate.Size = new System.Drawing.Size(174, 17);
+            this.cbRandomRotate.TabIndex = 12;
+            this.cbRandomRotate.Text = "Случайно поворачивать фото";
+            this.cbRandomRotate.UseVisualStyleBackColor = true;
+            this.cbRandomRotate.CheckedChanged += new System.EventHandler(this.cbRandomRotate_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(372, 275);
+            this.ClientSize = new System.Drawing.Size(372, 320);
             this.Controls.Add(this.bStart);
             this.Controls.Add(this.bOpenFolder);
             this.Controls.Add(this.tbPath);
@@ -278,6 +306,8 @@
         private System.Windows.Forms.Button bOpenFolder;
         private System.Windows.Forms.Button bStart;
         private System.Windows.Forms.FolderBrowserDialog fBD;
+        private System.Windows.Forms.CheckBox cbRandomRotate;
+        private System.Windows.Forms.CheckBox cbRandomCrop;
     }
 }
 

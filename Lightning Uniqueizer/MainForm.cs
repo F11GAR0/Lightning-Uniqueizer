@@ -22,6 +22,8 @@ namespace Lightning_Uniqueizer
             nMaxPixels.Value = Globals.settings.Instance.iPixelCount;
             cbAddWatermark.Checked = Globals.settings.Instance.bUseWatermark;
             cbMultithread.Checked = Globals.settings.Instance.bUseMultithread;
+            cbRandomCrop.Checked = Globals.settings.Instance.bRandomCrop;
+            cbRandomRotate.Checked = Globals.settings.Instance.bRandomRotate;
             tbPath.Text = Globals.settings.Instance.sDefaultPicturesFolder;
             tbWaterFolder.Text = Globals.settings.Instance.sWatermarkFolder;
             if (Directory.Exists(tbPath.Text))
@@ -87,6 +89,32 @@ namespace Lightning_Uniqueizer
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Globals.settings.Save();
+        }
+
+        private void cbRandomCrop_CheckedChanged(object sender, EventArgs e)
+        {
+            Globals.settings.SetRandomCrop(cbRandomCrop.Checked);
+        }
+
+        private void cbRandomRotate_CheckedChanged(object sender, EventArgs e)
+        {
+            Globals.settings.SetRandomRotate(cbRandomRotate.Checked);
+        }
+
+        private void bChoiceWaterFolder_Click(object sender, EventArgs e)
+        {
+            if (fBD.ShowDialog() == DialogResult.OK)
+            {
+                Globals.settings.SetWatermarkFolder(fBD.SelectedPath);
+                tbWaterFolder.Text = fBD.SelectedPath;
+                EnableSettings();
+            }
+        }
+
+        private void bStart_Click(object sender, EventArgs e)
+        {
+            Globals.uniq.Load(Globals.settings.Instance.sDefaultPicturesFolder);
+            Globals.uniq.Start();
         }
     }
 }
