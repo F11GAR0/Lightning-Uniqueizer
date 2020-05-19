@@ -16,10 +16,12 @@ namespace Lightning_Uniqueizer
         public MainForm()
         {
             InitializeComponent();
+            Log.Clear();
             Globals.settings.Load();
             nMaxThreads.Value = Globals.settings.Instance.iThreadCount;
             nMaxWaters.Value = Globals.settings.Instance.iWatermarksCount;
             nMaxPixels.Value = Globals.settings.Instance.iPixelCount;
+            nDirectoriesCount.Value = Globals.settings.Instance.iDirectoriesCount;
             cbAddWatermark.Checked = Globals.settings.Instance.bUseWatermark;
             cbMultithread.Checked = Globals.settings.Instance.bUseMultithread;
             cbRandomCrop.Checked = Globals.settings.Instance.bRandomCrop;
@@ -42,13 +44,13 @@ namespace Lightning_Uniqueizer
         {
             bChoiceWaterFolder.Enabled ^= true;
             nMaxWaters.Enabled ^= true;
-            Globals.settings.SetUseWatermark(bChoiceWaterFolder.Enabled);
+            Globals.settings.SetUseWatermark(cbAddWatermark.Checked);
         }
 
         private void ToggleMultithreadSettings()
         {
             nMaxThreads.Enabled ^= true;
-            Globals.settings.SetUseMultithread(nMaxThreads.Enabled);
+            Globals.settings.SetUseMultithread(cbMultithread.Checked);
         }
 
         private void bOpenFolder_Click(object sender, EventArgs e)
@@ -115,6 +117,11 @@ namespace Lightning_Uniqueizer
         {
             Globals.uniq.Load(Globals.settings.Instance.sDefaultPicturesFolder);
             Globals.uniq.Start();
+        }
+
+        private void nDirectoriesCount_ValueChanged(object sender, EventArgs e)
+        {
+            Globals.settings.SetDirectoriesCount((int)nDirectoriesCount.Value);
         }
     }
 }

@@ -11,27 +11,28 @@ namespace Lightning_Uniqueizer
 {
     class LightningEngine
     {
-        private static Image getImage(string path)
+        public static Image getImage(string path)
         {
             FileStream fileStream = new FileStream(path, FileMode.Open);
-            Image ret = Image.FromStream(fileStream);
+            Image ret = Bitmap.FromStream(fileStream);
             fileStream.Close();
             return ret;
         }
-        private static Image rotateImage(Image _in, int angle)
+        private static Image rotateImage(Image _in, double angle)
         {
+            //Bitmap bmp = _in as Bitmap;
             Graphics graphics = Graphics.FromImage(_in);
-            graphics.RotateTransform(angle);
-            graphics.DrawImage(_in, new Point(0, 0));
+            graphics.RotateTransform((float)angle);
+            graphics.DrawImage(_in, 0, 0, _in.Width - 1, _in.Height - 1);
             graphics.Dispose();
             return _in;
         }
         private static Image cropImage(Image image, Rectangle selection)
         {
             Bitmap bmp = image as Bitmap;
-            if (bmp == null)
-                throw new ArgumentException("No valid bitmap");
-            return bmp.Clone(selection, bmp.PixelFormat);
+            Image ret = bmp.Clone(selection, bmp.PixelFormat);
+            bmp.Dispose();
+            return ret;
         }
         public static Image addWaterMark(Image orig, Image waterMark, Random rnd, int count)
         {
@@ -40,19 +41,27 @@ namespace Lightning_Uniqueizer
             {
                 for (int i = 0; i < count; i++)
                 {
-                    location.X = rnd.Next(2, orig.Width - 5);
-                    location.Y = rnd.Next(2, orig.Height - 5);
-                    g.DrawImage(waterMark, location);
+                    location.X = rnd.Next(2, orig.Width);
+                    location.Y = rnd.Next(2, orig.Height);
+
+                    /*Point bounds = new Point(location.X + waterMark.Width, location.Y + waterMark.Height);
+                    if (bounds.X > orig.Width || bounds.Y > orig.Width)
+                    {
+                        g.DrawImage(waterMark, location.X, location.Y, bounds.X - orig.Width - 1, bounds.Y - orig.Height - 1);
+                    }
+                    else
+                    {
+                    */
+                        g.DrawImage(waterMark, location);
+                    //}   
                 }
+                g.Dispose();
             }
-            waterMark.Dispose();
             return orig;
         }
         private static Image randomPixelSwapImage(Image image, int count, Random rnd)
         {
             Bitmap bmp = image as Bitmap;
-            if (bmp == null)
-                throw new ArgumentException("No valid bitmap");
 
             int x = rnd.Next(1, image.Width);
             int y = rnd.Next(1, image.Height);
@@ -64,36 +73,51 @@ namespace Lightning_Uniqueizer
                 Color tmp = bmp.GetPixel(x, y);
                 bmp.SetPixel(x, y, bmp.GetPixel(x2, y2));
                 bmp.SetPixel(x2, y2, tmp);
+                bmp.SetPixel(rnd.Next(1, image.Width), rnd.Next(1, image.Height), Color.Black);
             }
-            return bmp;
+
+            Image ret = bmp;
+            bmp.Dispose();
+            return ret;
         }
-        public static void ProcessPicture(string path, int pixel_count, string watermark_path = "" )
+        public static void ProcessPicture(string dir, string path, int pixel_count, Image watermark)
         {
-            FileInfo fInfo = new FileInfo(path);
-            DirectoryInfo dParentSave = fInfo.Directory;
-            string save_dir = dParentSave.FullName + "_lightning";
-            string save_file = save_dir + "\\0" + fInfo.Name;
-            Random rand = new Random((int)DateTime.Now.Ticks);
-            //MessageBox.Show(save_file);
-            if (!Directory.Exists(save_dir))
+            try
             {
-                Directory.CreateDirectory(save_dir);
+                Log.AddMessage("dir: " + dir + " path: " + path + " pixel_count: " + pixel_count.ToString() + " image: " + (watermark == null ? "null" : "normal " + watermark.RawFormat.ToString()));
+                FileInfo fInfo = new FileInfo(path);
+                DirectoryInfo dParentSave = fInfo.Directory;
+
+                string save_dir = dir + "_lightning" + ((dParentSave != fInfo.Directory) ? "\\" + fInfo.Directory.Name : "");
+                string save_file = save_dir + "\\0" + fInfo.Name;
+                Random rand = new Random((int)DateTime.Now.Ticks + DateTime.Now.Millisecond + DateTime.Now.Second + DateTime.Now.Minute);
+                if (!Directory.Exists(save_dir))
+                {
+                    Directory.CreateDirectory(save_dir);
+                }
+                Image image = getImage(path);
+                if (Globals.settings.Instance.bUseWatermark)
+                {
+                    image = addWaterMark(image, watermark, rand, Globals.settings.Instance.iWatermarksCount);
+                }
+                GC.Collect();
+                if (Globals.settings.Instance.bRandomRotate)
+                {
+                    image = rotateImage(image, rand.NextDouble() + rand.Next(-1, 1));
+                }
+                if (Globals.settings.Instance.bRandomCrop)
+                {
+                    Point crop_right = new Point(rand.Next(3, 10), rand.Next(3, 10));
+                    image = cropImage(image, new Rectangle(crop_right.X, crop_right.Y, image.Width - crop_right.X, image.Height - crop_right.Y));
+                }
+                image.Save(save_file);
+                image.Dispose();
+                GC.Collect();
             }
-            Image image = getImage(path);
-            if (Globals.settings.Instance.bUseWatermark)
+            catch(Exception e)
             {
-                image = addWaterMark(image, getImage(watermark_path), rand, Globals.settings.Instance.iWatermarksCount);
+                Log.AddMessage(e.Message + e.StackTrace);
             }
-            GC.Collect();
-            if (Globals.settings.Instance.bRandomRotate)
-            {
-                image = rotateImage(image, rand.Next(-5, 5));
-            }
-            if (Globals.settings.Instance.bRandomCrop)
-            {
-                image = cropImage(image, new Rectangle(0 + rand.Next(5), 0 + rand.Next(5), image.Width - rand.Next(5), image.Height - rand.Next(5)));
-            }
-            image.Save(save_file);
         }
     }
     class Uniqueizer
@@ -141,23 +165,38 @@ namespace Lightning_Uniqueizer
         public void Start()
         {
             Random rand = new Random();
+            DateTime now = DateTime.Now;
             if (Globals.settings.Instance.bUseMultithread)
             {
                 ParallelOptions opt = new ParallelOptions();
+               // opt.TaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
                 opt.MaxDegreeOfParallelism = Globals.settings.Instance.iThreadCount;
-
                 if (Globals.settings.Instance.bUseWatermark)
                 {
-                    Parallel.For(0, m_PathList.Count, opt, k =>
+                    try
                     {
-                        LightningEngine.ProcessPicture(m_PathList[k], Globals.settings.Instance.iPixelCount, m_WotermarksList[rand.Next(m_WotermarksList.Count)]);
-                    });
+                        Image watermark = LightningEngine.getImage(m_WotermarksList[rand.Next(m_WotermarksList.Count)]);
+                        Log.AddMessage("Watermark state: " + (watermark == null ? "null" : "normal"));
+                        Parallel.For(0, m_PathList.Count, opt, k =>
+                        {
+                            for (int i = 0; i < Globals.settings.Instance.iDirectoriesCount; i++)
+                                if (m_PathList[k] != "")
+                                    LightningEngine.ProcessPicture(Globals.settings.Instance.sDefaultPicturesFolder + i.ToString(), m_PathList[k].ToString(), Globals.settings.Instance.iPixelCount, (Image)watermark.Clone());
+                        });
+                        watermark.Dispose();
+                    }
+                    catch
+                    {
+                        //
+                    }
                 }
                 else
                 {
                     Parallel.For(0, m_PathList.Count, opt, k =>
                     {
-                        LightningEngine.ProcessPicture(m_PathList[k], Globals.settings.Instance.iPixelCount);
+                        for (int i = 0; i < Globals.settings.Instance.iDirectoriesCount; i++)
+                            if (m_PathList[k] != "")
+                                LightningEngine.ProcessPicture(Globals.settings.Instance.sDefaultPicturesFolder + i.ToString(), m_PathList[k], Globals.settings.Instance.iPixelCount, null);
                     });
                 }
             } else
@@ -166,20 +205,28 @@ namespace Lightning_Uniqueizer
                 {
                     foreach (var i in m_PathList)
                     {
-                        if (i != "")
-                            LightningEngine.ProcessPicture(i, Globals.settings.Instance.iPixelCount);
+                        for(int k = 0; k < Globals.settings.Instance.iDirectoriesCount; k++)
+                            if (i != "")
+                                LightningEngine.ProcessPicture(Globals.settings.Instance.sDefaultPicturesFolder + k.ToString(), i, Globals.settings.Instance.iPixelCount, null);
                     }
                 }
                 else
                 {
                     foreach (var i in m_PathList)
                     {
-                        if (i != "")
-                            LightningEngine.ProcessPicture(i, Globals.settings.Instance.iPixelCount, m_WotermarksList[rand.Next(m_WotermarksList.Count)]);
+                        Image watermark = LightningEngine.getImage(m_WotermarksList[rand.Next(m_WotermarksList.Count)]);
+                        for (int k = 0; k < Globals.settings.Instance.iDirectoriesCount; k++)
+                        {
+                            if (i != "")
+                                LightningEngine.ProcessPicture(Globals.settings.Instance.sDefaultPicturesFolder + k.ToString(), i, Globals.settings.Instance.iPixelCount, watermark);
+                            
+                        }
+                        watermark.Dispose();
                     }
                 }
             }
-            MessageBox.Show("Complete", "Success!", MessageBoxButtons.OK);
+
+            MessageBox.Show("Complete. Time: " + (DateTime.Now - now).ToString(), "Success!", MessageBoxButtons.OK);
         }
     }
 }

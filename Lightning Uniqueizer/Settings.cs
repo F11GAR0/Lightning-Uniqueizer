@@ -18,6 +18,7 @@ namespace Lightning_Uniqueizer
         public int iThreadCount;
         public int iWatermarksCount;
         public int iPixelCount;
+        public int iDirectoriesCount;
     }
     class Settings
     {
@@ -31,6 +32,11 @@ namespace Lightning_Uniqueizer
             {
                 m_Settings = value;
             }
+        }
+
+        public void SetDirectoriesCount(int val)
+        {
+            m_Settings.iDirectoriesCount = val;
         }
 
         public void SetUseMultithread(bool val)
@@ -154,6 +160,11 @@ namespace Lightning_Uniqueizer
                             m_Settings.iWatermarksCount = parse_get_int(splitted[1]);
                             continue;
                         }
+                        if(splitted[0] == "directories_count")
+                        {
+                            m_Settings.iDirectoriesCount = parse_get_int(splitted[1]);
+                            continue;
+                        }
                     }
                 }
             } else
@@ -168,6 +179,7 @@ namespace Lightning_Uniqueizer
                 writer.WriteLine("pixel_count = 1");
                 writer.WriteLine("max_threads_count = 1");
                 writer.WriteLine("watermarks_count = 1");
+                writer.WriteLine("directories_count = 1");
                 writer.Close();
                 m_Settings.bUseMultithread = true;
                 m_Settings.bUseWatermark = false;
@@ -178,6 +190,7 @@ namespace Lightning_Uniqueizer
                 m_Settings.iPixelCount = 1;
                 m_Settings.iThreadCount = 1;
                 m_Settings.iWatermarksCount = 1;
+                m_Settings.iDirectoriesCount = 1;
             }
         }
         public void Save()
@@ -194,6 +207,7 @@ namespace Lightning_Uniqueizer
             writer.WriteLine("pixel_count = " + m_Settings.iPixelCount.ToString());
             writer.WriteLine("max_threads_count = " + m_Settings.iThreadCount.ToString());
             writer.WriteLine("watermarks_count = " + m_Settings.iWatermarksCount.ToString());
+            writer.WriteLine("directories_count = " + m_Settings.iDirectoriesCount.ToString());
             writer.Close();
         }
     }
@@ -201,6 +215,5 @@ namespace Lightning_Uniqueizer
     {
         public static Settings settings = new Settings();
         public static Uniqueizer uniq = new Uniqueizer();
-
     }
 }
