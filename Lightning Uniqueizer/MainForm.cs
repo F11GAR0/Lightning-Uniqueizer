@@ -28,6 +28,7 @@ namespace Lightning_Uniqueizer
             cbRandomRotate.Checked = Globals.settings.Instance.bRandomRotate;
             tbPath.Text = Globals.settings.Instance.sDefaultPicturesFolder;
             tbWaterFolder.Text = Globals.settings.Instance.sWatermarkFolder;
+            Globals.uniq.defaultWatermarkPosition = Uniqueizer.eWatermarkPosition.RANDOM;
             if (Directory.Exists(tbPath.Text))
             {
                 EnableSettings();
@@ -122,6 +123,11 @@ namespace Lightning_Uniqueizer
         private void nDirectoriesCount_ValueChanged(object sender, EventArgs e)
         {
             Globals.settings.SetDirectoriesCount((int)nDirectoriesCount.Value);
+        }
+
+        private void cbWatermarkPosition_TextUpdate(object sender, EventArgs e)
+        {
+            Globals.uniq.defaultWatermarkPosition = (Uniqueizer.eWatermarkPosition)cbWatermarkPosition.SelectedIndex;
         }
     }
 }

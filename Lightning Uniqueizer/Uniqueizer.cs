@@ -122,6 +122,22 @@ namespace Lightning_Uniqueizer
     }
     class Uniqueizer
     {
+        public enum eWatermarkPosition
+        {
+            RANDOM,
+            UP_LEFT,
+            UP_MIDDLE,
+            UP_RIGHT,
+            CENTER_LEFT,
+            CENTER_MIDDLE,
+            CENTER_RIGHT,
+            DOWN_LEFT,
+            DOWN_MIDDLE,
+            DOWN_RIGHT
+        }
+
+        public eWatermarkPosition defaultWatermarkPosition;
+
         private List<string> m_PathList = new List<string>();
         private List<string> m_WotermarksList = new List<string>();
 
