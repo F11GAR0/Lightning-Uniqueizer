@@ -129,5 +129,10 @@ namespace Lightning_Uniqueizer
         {
             Globals.uniq.defaultWatermarkPosition = (Uniqueizer.eWatermarkPosition)cbWatermarkPosition.SelectedIndex;
         }
+
+        private void cbWatermarkPosition_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Globals.uniq.defaultWatermarkPosition = (Uniqueizer.eWatermarkPosition)cbWatermarkPosition.SelectedIndex;
+        }
     }
 }

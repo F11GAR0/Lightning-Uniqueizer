@@ -14,7 +14,7 @@ namespace Lightning_Uniqueizer
         public static Image getImage(string path)
         {
             FileStream fileStream = new FileStream(path, FileMode.Open);
-            Image ret = Bitmap.FromStream(fileStream);
+            Image ret = Image.FromStream(fileStream);
             fileStream.Close();
             return ret;
         }
@@ -59,6 +59,53 @@ namespace Lightning_Uniqueizer
             }
             return orig;
         }
+        public static Image addWaterMark(Image orig, Image waterMark, Uniqueizer.eWatermarkPosition position)
+        {
+            // 0 w/3 w*2/3
+            Point location = new Point();
+            using (Graphics g = Graphics.FromImage(orig))
+            {
+                switch (position)
+                {
+                    case Uniqueizer.eWatermarkPosition.UP_LEFT:
+                    case Uniqueizer.eWatermarkPosition.UP_MIDDLE:
+                    case Uniqueizer.eWatermarkPosition.UP_RIGHT:
+                        location.Y = 0;
+                        break;
+                    case Uniqueizer.eWatermarkPosition.CENTER_LEFT:
+                    case Uniqueizer.eWatermarkPosition.CENTER_MIDDLE:
+                    case Uniqueizer.eWatermarkPosition.CENTER_RIGHT:
+                        location.Y = orig.Height / 3;
+                        break;
+                    case Uniqueizer.eWatermarkPosition.DOWN_LEFT:
+                    case Uniqueizer.eWatermarkPosition.DOWN_MIDDLE:
+                    case Uniqueizer.eWatermarkPosition.DOWN_RIGHT:
+                        location.Y = orig.Height / 3 * 2;
+                        break;
+                }
+                switch (position)
+                {
+                    case Uniqueizer.eWatermarkPosition.CENTER_LEFT:
+                    case Uniqueizer.eWatermarkPosition.DOWN_LEFT:
+                    case Uniqueizer.eWatermarkPosition.UP_LEFT:
+                        location.X = 0;
+                        break;
+                    case Uniqueizer.eWatermarkPosition.CENTER_MIDDLE:
+                    case Uniqueizer.eWatermarkPosition.DOWN_MIDDLE:
+                    case Uniqueizer.eWatermarkPosition.UP_MIDDLE:
+                        location.X = orig.Width / 3;
+                        break;
+                    case Uniqueizer.eWatermarkPosition.CENTER_RIGHT:
+                    case Uniqueizer.eWatermarkPosition.DOWN_RIGHT:
+                    case Uniqueizer.eWatermarkPosition.UP_RIGHT:
+                        location.X = orig.Width / 3 * 2;
+                        break;
+                }
+                g.DrawImage(waterMark, location.X, location.Y, orig.Width / 3, orig.Height / 3);
+                g.Dispose();
+            }
+            return orig;
+        }
         private static Image randomPixelSwapImage(Image image, int count, Random rnd)
         {
             Bitmap bmp = image as Bitmap;
@@ -80,7 +127,7 @@ namespace Lightning_Uniqueizer
             bmp.Dispose();
             return ret;
         }
-        public static void ProcessPicture(string dir, string path, int pixel_count, Image watermark)
+        public static void ProcessPicture(string dir, string path, int pixel_count, Image watermark, Uniqueizer.eWatermarkPosition position)
         {
             try
             {
@@ -98,9 +145,11 @@ namespace Lightning_Uniqueizer
                 Image image = getImage(path);
                 if (Globals.settings.Instance.bUseWatermark)
                 {
-                    image = addWaterMark(image, watermark, rand, Globals.settings.Instance.iWatermarksCount);
-                }
-                GC.Collect();
+                    if (position == Uniqueizer.eWatermarkPosition.RANDOM)
+                        image = addWaterMark(image, watermark, rand, Globals.settings.Instance.iWatermarksCount);
+                    else
+                        image = addWaterMark(image, watermark, position);
+                }   
                 if (Globals.settings.Instance.bRandomRotate)
                 {
                     image = rotateImage(image, rand.NextDouble() + rand.Next(-1, 1));
@@ -163,7 +212,8 @@ namespace Lightning_Uniqueizer
                         m_PathList.Add(f.FullName);
                 }
             }
-        }
+        }
+
         public void Load(string working_directory)
         {
             m_PathList.Clear();
@@ -197,7 +247,7 @@ namespace Lightning_Uniqueizer
                         {
                             for (int i = 0; i < Globals.settings.Instance.iDirectoriesCount; i++)
                                 if (m_PathList[k] != "")
-                                    LightningEngine.ProcessPicture(Globals.settings.Instance.sDefaultPicturesFolder + i.ToString(), m_PathList[k].ToString(), Globals.settings.Instance.iPixelCount, (Image)watermark.Clone());
+                                    LightningEngine.ProcessPicture(Globals.settings.Instance.sDefaultPicturesFolder + i.ToString(), m_PathList[k].ToString(), Globals.settings.Instance.iPixelCount, (Image)watermark.Clone(), defaultWatermarkPosition);
                         });
                         watermark.Dispose();
                     }
@@ -212,7 +262,7 @@ namespace Lightning_Uniqueizer
                     {
                         for (int i = 0; i < Globals.settings.Instance.iDirectoriesCount; i++)
                             if (m_PathList[k] != "")
-                                LightningEngine.ProcessPicture(Globals.settings.Instance.sDefaultPicturesFolder + i.ToString(), m_PathList[k], Globals.settings.Instance.iPixelCount, null);
+                                LightningEngine.ProcessPicture(Globals.settings.Instance.sDefaultPicturesFolder + i.ToString(), m_PathList[k], Globals.settings.Instance.iPixelCount, null, defaultWatermarkPosition);
                     });
                 }
             } else
@@ -223,7 +273,7 @@ namespace Lightning_Uniqueizer
                     {
                         for(int k = 0; k < Globals.settings.Instance.iDirectoriesCount; k++)
                             if (i != "")
-                                LightningEngine.ProcessPicture(Globals.settings.Instance.sDefaultPicturesFolder + k.ToString(), i, Globals.settings.Instance.iPixelCount, null);
+                                LightningEngine.ProcessPicture(Globals.settings.Instance.sDefaultPicturesFolder + k.ToString(), i, Globals.settings.Instance.iPixelCount, null, defaultWatermarkPosition);
                     }
                 }
                 else
@@ -234,7 +284,7 @@ namespace Lightning_Uniqueizer
                         for (int k = 0; k < Globals.settings.Instance.iDirectoriesCount; k++)
                         {
                             if (i != "")
-                                LightningEngine.ProcessPicture(Globals.settings.Instance.sDefaultPicturesFolder + k.ToString(), i, Globals.settings.Instance.iPixelCount, watermark);
+                                LightningEngine.ProcessPicture(Globals.settings.Instance.sDefaultPicturesFolder + k.ToString(), i, Globals.settings.Instance.iPixelCount, watermark, defaultWatermarkPosition);
                             
                         }
                         watermark.Dispose();

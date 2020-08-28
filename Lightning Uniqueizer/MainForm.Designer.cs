@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.gbSettings = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.cbWatermarkPosition = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.nDirectoriesCount = new System.Windows.Forms.NumericUpDown();
             this.cbRandomRotate = new System.Windows.Forms.CheckBox();
@@ -49,8 +51,6 @@
             this.bOpenFolder = new System.Windows.Forms.Button();
             this.bStart = new System.Windows.Forms.Button();
             this.fBD = new System.Windows.Forms.FolderBrowserDialog();
-            this.cbWatermarkPosition = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.gbSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nDirectoriesCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nMaxPixels)).BeginInit();
@@ -84,6 +84,37 @@
             this.gbSettings.TabIndex = 0;
             this.gbSettings.TabStop = false;
             this.gbSettings.Text = "Настройки";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 154);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(132, 13);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "Положение вотермарки:";
+            // 
+            // cbWatermarkPosition
+            // 
+            this.cbWatermarkPosition.FormattingEnabled = true;
+            this.cbWatermarkPosition.Items.AddRange(new object[] {
+            "Случайное",
+            "Верх-Слева",
+            "Верх-Центр",
+            "Верх-Справа",
+            "Середина-Слева",
+            "Центр",
+            "Середина-Справа",
+            "Низ-Слева",
+            "Низ-Центр",
+            "Низ-Справа"});
+            this.cbWatermarkPosition.Location = new System.Drawing.Point(141, 151);
+            this.cbWatermarkPosition.Name = "cbWatermarkPosition";
+            this.cbWatermarkPosition.Size = new System.Drawing.Size(195, 21);
+            this.cbWatermarkPosition.TabIndex = 15;
+            this.cbWatermarkPosition.Text = "Случайное";
+            this.cbWatermarkPosition.SelectedIndexChanged += new System.EventHandler(this.cbWatermarkPosition_SelectedIndexChanged);
+            this.cbWatermarkPosition.TextUpdate += new System.EventHandler(this.cbWatermarkPosition_TextUpdate);
             // 
             // label5
             // 
@@ -304,36 +335,6 @@
             // fBD
             // 
             this.fBD.Description = "Выберите папку";
-            // 
-            // cbWatermarkPosition
-            // 
-            this.cbWatermarkPosition.FormattingEnabled = true;
-            this.cbWatermarkPosition.Items.AddRange(new object[] {
-            "Случайное",
-            "Верх-Слева",
-            "Верх-Центр",
-            "Верх-Справа",
-            "Середина-Слева",
-            "Центр",
-            "Середина-Справа",
-            "Низ-Слева",
-            "Низ-Центр",
-            "Низ-Справа"});
-            this.cbWatermarkPosition.Location = new System.Drawing.Point(141, 151);
-            this.cbWatermarkPosition.Name = "cbWatermarkPosition";
-            this.cbWatermarkPosition.Size = new System.Drawing.Size(195, 21);
-            this.cbWatermarkPosition.TabIndex = 15;
-            this.cbWatermarkPosition.Text = "Случайное";
-            this.cbWatermarkPosition.TextUpdate += new System.EventHandler(this.cbWatermarkPosition_TextUpdate);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 154);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(132, 13);
-            this.label6.TabIndex = 16;
-            this.label6.Text = "Положение вотермарки:";
             // 
             // MainForm
             // 
