@@ -75,12 +75,12 @@ namespace Lightning_Uniqueizer
                     case Uniqueizer.eWatermarkPosition.CENTER_LEFT:
                     case Uniqueizer.eWatermarkPosition.CENTER_MIDDLE:
                     case Uniqueizer.eWatermarkPosition.CENTER_RIGHT:
-                        location.Y = orig.Height / 3;
+                        location.Y = orig.Height / 2 - (waterMark.Height / 2);
                         break;
                     case Uniqueizer.eWatermarkPosition.DOWN_LEFT:
                     case Uniqueizer.eWatermarkPosition.DOWN_MIDDLE:
                     case Uniqueizer.eWatermarkPosition.DOWN_RIGHT:
-                        location.Y = orig.Height / 3 * 2;
+                        location.Y = orig.Height - waterMark.Height;
                         break;
                 }
                 switch (position)
@@ -93,15 +93,15 @@ namespace Lightning_Uniqueizer
                     case Uniqueizer.eWatermarkPosition.CENTER_MIDDLE:
                     case Uniqueizer.eWatermarkPosition.DOWN_MIDDLE:
                     case Uniqueizer.eWatermarkPosition.UP_MIDDLE:
-                        location.X = orig.Width / 3;
+                        location.X = orig.Width / 2 - waterMark.Width / 2;
                         break;
                     case Uniqueizer.eWatermarkPosition.CENTER_RIGHT:
                     case Uniqueizer.eWatermarkPosition.DOWN_RIGHT:
                     case Uniqueizer.eWatermarkPosition.UP_RIGHT:
-                        location.X = orig.Width / 3 * 2;
+                        location.X = orig.Width - waterMark.Width;
                         break;
                 }
-                g.DrawImage(waterMark, location.X, location.Y, orig.Width / 3, orig.Height / 3);
+                g.DrawImage(waterMark, location.X, location.Y);
                 g.Dispose();
             }
             return orig;
