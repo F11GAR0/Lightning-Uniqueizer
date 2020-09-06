@@ -51,15 +51,20 @@
             this.bOpenFolder = new System.Windows.Forms.Button();
             this.bStart = new System.Windows.Forms.Button();
             this.fBD = new System.Windows.Forms.FolderBrowserDialog();
+            this.lResolution = new System.Windows.Forms.Label();
+            this.trbResolution = new System.Windows.Forms.TrackBar();
             this.gbSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nDirectoriesCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nMaxPixels)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nMaxWaters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nMaxThreads)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trbResolution)).BeginInit();
             this.SuspendLayout();
             // 
             // gbSettings
             // 
+            this.gbSettings.Controls.Add(this.trbResolution);
+            this.gbSettings.Controls.Add(this.lResolution);
             this.gbSettings.Controls.Add(this.label6);
             this.gbSettings.Controls.Add(this.cbWatermarkPosition);
             this.gbSettings.Controls.Add(this.label5);
@@ -80,7 +85,7 @@
             this.gbSettings.Enabled = false;
             this.gbSettings.Location = new System.Drawing.Point(12, 41);
             this.gbSettings.Name = "gbSettings";
-            this.gbSettings.Size = new System.Drawing.Size(349, 285);
+            this.gbSettings.Size = new System.Drawing.Size(349, 306);
             this.gbSettings.TabIndex = 0;
             this.gbSettings.TabStop = false;
             this.gbSettings.Text = "Настройки";
@@ -119,7 +124,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 205);
+            this.label5.Location = new System.Drawing.Point(6, 228);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(102, 13);
             this.label5.TabIndex = 14;
@@ -127,7 +132,7 @@
             // 
             // nDirectoriesCount
             // 
-            this.nDirectoriesCount.Location = new System.Drawing.Point(267, 203);
+            this.nDirectoriesCount.Location = new System.Drawing.Point(267, 226);
             this.nDirectoriesCount.Minimum = new decimal(new int[] {
             1,
             0,
@@ -146,7 +151,7 @@
             // cbRandomRotate
             // 
             this.cbRandomRotate.AutoSize = true;
-            this.cbRandomRotate.Location = new System.Drawing.Point(6, 256);
+            this.cbRandomRotate.Location = new System.Drawing.Point(6, 279);
             this.cbRandomRotate.Name = "cbRandomRotate";
             this.cbRandomRotate.Size = new System.Drawing.Size(174, 17);
             this.cbRandomRotate.TabIndex = 12;
@@ -157,7 +162,7 @@
             // cbRandomCrop
             // 
             this.cbRandomCrop.AutoSize = true;
-            this.cbRandomCrop.Location = new System.Drawing.Point(6, 233);
+            this.cbRandomCrop.Location = new System.Drawing.Point(6, 256);
             this.cbRandomCrop.Name = "cbRandomCrop";
             this.cbRandomCrop.Size = new System.Drawing.Size(151, 17);
             this.cbRandomCrop.TabIndex = 11;
@@ -168,7 +173,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 179);
+            this.label4.Location = new System.Drawing.Point(6, 202);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(184, 13);
             this.label4.TabIndex = 10;
@@ -176,7 +181,7 @@
             // 
             // nMaxPixels
             // 
-            this.nMaxPixels.Location = new System.Drawing.Point(267, 177);
+            this.nMaxPixels.Location = new System.Drawing.Point(267, 200);
             this.nMaxPixels.Minimum = new decimal(new int[] {
             1,
             0,
@@ -324,7 +329,7 @@
             // bStart
             // 
             this.bStart.Enabled = false;
-            this.bStart.Location = new System.Drawing.Point(12, 332);
+            this.bStart.Location = new System.Drawing.Point(12, 353);
             this.bStart.Name = "bStart";
             this.bStart.Size = new System.Drawing.Size(75, 23);
             this.bStart.TabIndex = 3;
@@ -336,11 +341,34 @@
             // 
             this.fBD.Description = "Выберите папку";
             // 
+            // lResolution
+            // 
+            this.lResolution.AutoSize = true;
+            this.lResolution.Location = new System.Drawing.Point(6, 177);
+            this.lResolution.Name = "lResolution";
+            this.lResolution.Size = new System.Drawing.Size(22, 13);
+            this.lResolution.TabIndex = 18;
+            this.lResolution.Text = "1:3";
+            // 
+            // trbResolution
+            // 
+            this.trbResolution.AutoSize = false;
+            this.trbResolution.LargeChange = 100;
+            this.trbResolution.Location = new System.Drawing.Point(74, 177);
+            this.trbResolution.Maximum = 1000;
+            this.trbResolution.Minimum = 200;
+            this.trbResolution.Name = "trbResolution";
+            this.trbResolution.Size = new System.Drawing.Size(262, 17);
+            this.trbResolution.SmallChange = 10;
+            this.trbResolution.TabIndex = 19;
+            this.trbResolution.Value = 300;
+            this.trbResolution.Scroll += new System.EventHandler(this.trbResolution_Scroll);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(372, 367);
+            this.ClientSize = new System.Drawing.Size(372, 388);
             this.Controls.Add(this.bStart);
             this.Controls.Add(this.bOpenFolder);
             this.Controls.Add(this.tbPath);
@@ -356,6 +384,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nMaxPixels)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nMaxWaters)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nMaxThreads)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trbResolution)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -385,6 +414,8 @@
         private System.Windows.Forms.NumericUpDown nDirectoriesCount;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox cbWatermarkPosition;
+        private System.Windows.Forms.Label lResolution;
+        private System.Windows.Forms.TrackBar trbResolution;
     }
 }
 

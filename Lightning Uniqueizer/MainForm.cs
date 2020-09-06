@@ -29,6 +29,7 @@ namespace Lightning_Uniqueizer
             tbPath.Text = Globals.settings.Instance.sDefaultPicturesFolder;
             tbWaterFolder.Text = Globals.settings.Instance.sWatermarkFolder;
             Globals.uniq.defaultWatermarkPosition = Uniqueizer.eWatermarkPosition.RANDOM;
+            Globals.settings.SetWatermarkResolution(3);
             if (Directory.Exists(tbPath.Text))
             {
                 EnableSettings();
@@ -133,6 +134,12 @@ namespace Lightning_Uniqueizer
         private void cbWatermarkPosition_SelectedIndexChanged(object sender, EventArgs e)
         {
             Globals.uniq.defaultWatermarkPosition = (Uniqueizer.eWatermarkPosition)cbWatermarkPosition.SelectedIndex;
+        }
+
+        private void trbResolution_Scroll(object sender, EventArgs e)
+        {
+            lResolution.Text = "1:" + ((double)trbResolution.Value / 100).ToString();
+            Globals.settings.SetWatermarkResolution((double)trbResolution.Value / 100);
         }
     }
 }

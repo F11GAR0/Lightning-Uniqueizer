@@ -19,6 +19,7 @@ namespace Lightning_Uniqueizer
         public int iWatermarksCount;
         public int iPixelCount;
         public int iDirectoriesCount;
+        public double dWatermarkResolution;
     }
     class Settings
     {
@@ -32,6 +33,16 @@ namespace Lightning_Uniqueizer
             {
                 m_Settings = value;
             }
+        }
+
+        public void SetWatermarkResolution(double val)
+        {
+            m_Settings.dWatermarkResolution = val;
+        }
+
+        public double GetWatermarkResolution()
+        {
+            return m_Settings.dWatermarkResolution;
         }
 
         public void SetDirectoriesCount(int val)

@@ -59,10 +59,17 @@ namespace Lightning_Uniqueizer
             }
             return orig;
         }
-        public static Image addWaterMark(Image orig, Image waterMark, Uniqueizer.eWatermarkPosition position)
+        public static Image addWaterMark(Image orig, Image watermark, Uniqueizer.eWatermarkPosition position)
         {
             // 0 w/3 w*2/3
+            double resolution = Globals.settings.GetWatermarkResolution();
             Point location = new Point();
+            Rectangle waterMark = new Rectangle();
+            waterMark.Width = (int)Math.Round(orig.Width / resolution);
+            waterMark.Height = (int)Math.Round(((orig.Width / resolution) * watermark.Height) / watermark.Width);
+            //[orig.Width / 3] / x : watermark.Width / watermark.Height
+            //x = ((orig.Width / 3) * watermark.Height) / waterMark.Width
+
             using (Graphics g = Graphics.FromImage(orig))
             {
                 switch (position)
@@ -101,7 +108,7 @@ namespace Lightning_Uniqueizer
                         location.X = orig.Width - waterMark.Width;
                         break;
                 }
-                g.DrawImage(waterMark, location.X, location.Y);
+                g.DrawImage(watermark, location.X, location.Y, waterMark.Width, waterMark.Height);
                 g.Dispose();
             }
             return orig;
